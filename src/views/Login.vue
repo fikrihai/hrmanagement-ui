@@ -1,39 +1,65 @@
-<script setup>
-
-</script>
-
 <template>
-  
-    <div class="page-header align-items-start min-vh-100"
-      style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');">
-      <div class="container my-auto">
-        <div class="row">
-          <div class="col-lg-4 col-md-8 col-12 mx-auto">
-            <div class="card z-index-0 fadeIn3 fadeInBottom">
-              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                  <h4 class="text-black font-weight-bolder text-center mt-2 mb-0">Sign in</h4>
-                </div>
-              </div>
-              <div class="card-body">
-                <form role="form" class="text-start">
-                  <div class="input-group input-group-outline my-3">
-                    <input type="email" class="form-control" placeholder="Nik">
-                  </div>
-                  <div class="input-group input-group-outline mb-3">
-                    <input type="password" class="form-control" placeholder="Password">
-                  </div>
-                  <div class="text-center">
-                    <router-link :to="{ name: 'index' }" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign
-                      in</router-link>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <v-container>
+    <v-row align="center" no-gutters style="height: 150px;">
+      <v-col>
+        <v-sheet width="300" class="mx-auto">
+          <v-form ref="form">
+            <v-text-field
+              v-model="nik"
+              label="NIK"
+              :rules="NikRules"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="Password"
+              label="Password"
+              type="Password"
+              :rules="PasswordRules"
+            ></v-text-field>
+            <v-btn block class="mt-2" @click="validate">Submit</v-btn>
+          </v-form>
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<style scoped></style>
+<script>
+export default {
+  data: () => ({
+    isAuth: true,
+    nik: "",
+    NikRules: [
+      // (v) => !!v || "Nik Tidak boleh kosong",
+      (value) => {
+        if (value?.length > 1) return true;
+        return "Nik tidak boleh kosong";
+      },
+    ],
+    Password: "",
+    PasswordRules: [
+      (value) => {
+        if (value?.length > 1) return true;
+
+        return "Password tidak boleh kosong";
+      },
+    ],
+  }),
+  methods: {
+    async validate() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (valid)
+        this.$router.push({
+          name: "dasboard",
+          //params: { userId: this.nik }
+        });
+    },
+    goToDasboard() {
+      if (this.isAuth) {
+        this.$router.push("/");
+      }
+    },
+  },
+};
+</script>
